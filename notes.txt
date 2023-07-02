@@ -1,0 +1,61 @@
+loading.tsx (it applies react suspense under the hood)
+error.tsx
+for error boundary, it is recommended with suspense
+in next js the requests fetched are cached and fetching same request multiple times will result in 1 request
+
+recommendation:
+Here's a quick overview of the recommendations on this page:
+
+Fetch data on the server using Server Components.
+Fetch data in parallel to minimize waterfalls and reduce loading times.
+For Layouts and Pages, fetch data where it's used. Next.js will automatically dedupe requests in a tree.
+Use Loading UI, Streaming and Suspense to progressively render a page and show a result to the user while the rest of the content loads.
+
+type.d.ts and inside here you can
+    type User = {}
+prefetching on hover
+
+for dynamic route: [userId]
+type Params = {
+    params: {
+        userId: string;
+    }
+}
+
+if you have 2 requests that you want to fetch on page load you can either use promise all so no request waits for the other or send promises to components and resolve them inside
+you can wrape this component with a suspense
+type: Props = {
+    promise: Promise<Post[]>
+}
+
+default for next {cache: 'force-cache'} // you can use no-store
+ISR (incremental static generation) { next: { revalidates: 60 } }
+you can set this invalidation at layout or page level:
+export const revalidate = 60;
+
+SSG: (so next will know what the params are going to be)
+export async function generateStaticParam() {
+    const usersData: Promise<User[]> = getAllUsers()
+    const users = await usersData
+    return users.map(user => (
+        { userId: user.id.toString() }
+    ))
+}
+note that these SSG will still follow ISR strategy
+
+if(!res.ok) return undefined // so you get the default nextjs 404 page
+
+not-found.tsx
+
+make searchParam of type UrlSearchParam and use it
+
+return not necessary with notFound()
+
+***route handlers
+*thunder client extension
+new Response
+
+Route handlers are evaluated dynamically when:
+- Using the request object with the get methods.
+- Using any other HTTP methods.
+- Using dynamic functions like cookies and headers
